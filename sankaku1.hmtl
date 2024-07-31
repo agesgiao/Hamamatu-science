@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravity Game with Tree</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #game-container {
+            position: relative;
+            width: 300px;
+            height: 430px;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+
+        #tree {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 130%; /* 木の画像をコンテナの幅に合わせる */
+            height: auto;
+        }
+
+        .fruit {
+            position: absolute;
+            width: 30%; /* フルーツのサイズを調整 */
+            cursor: pointer;
+        }
+
+        #fruit1 {
+            top: 20%;
+            left: 25%;
+        }
+
+        #fruit2 {
+            top: 20%;
+            left: 65%;
+        }
+
+        #fruit3 {
+            top: 35%;
+            left: 5%;
+        }
+
+        #fruit4 {
+            top: 50%;
+            left: 5%;
+        }
+
+        #fruit5 {
+            top: 35%;
+            left: 50%;
+        }
+
+        #fruit6 {
+            top: 45%;
+            left: 70%;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>くだものをタップしてみよう！</h1>
+        <p>せいかいの「くだもの」だけ木からおちるよ</p>
+    </div>
+
+    <div id="game-container">
+        <img id="tree" src="images/ki.png" alt="Tree">
+        <img id="fruit1" class="fruit" src="images/1.PNG" alt="Fruit 1">
+        <img id="fruit2" class="fruit" src="images/2.PNG" alt="Fruit 2">
+        <img id="fruit3" class="fruit" src="images/3.PNG" alt="Fruit 3">
+        <img id="fruit4" class="fruit" src="images/4.PNG" alt="Fruit 4">
+        <img id="fruit5" class="fruit" src="images/5.PNG" alt="Fruit 5">
+        <img id="fruit6" class="fruit" src="images/6.PNG" alt="Fruit 6">
+    </div>
+
+    <script>
+        const fruits = document.querySelectorAll('.fruit');
+        const gravity = 0.5;
+        const correctFruitId = 'fruit2'; // 正解の果物IDを指定
+        let hasDropped = false;
+
+        fruits.forEach(fruit => {
+            fruit.addEventListener('click', () => {
+                if (hasDropped) return; // すでに果物が落ちている場合は何もしない
+
+                if (fruit.id === correctFruitId) {
+                    hasDropped = true; // 1つの果物が落ちたことを記録
+                    let positionY = parseFloat(getComputedStyle(fruit).top);
+                    let velocityY = 0;
+
+                    function drop() {
+                        velocityY += gravity;
+                        positionY += velocityY;
+
+                        // 果物が地面に着地したら落下を止める
+                        if (positionY >= 350) {
+                            positionY = 350;
+                            return;
+                        }
+
+                        fruit.style.top = positionY + 'px';
+                        requestAnimationFrame(drop);
+                    }
+
+                    drop();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
