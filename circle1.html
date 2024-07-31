@@ -74,10 +74,13 @@
             drawCircles();
         }
 
+        const radiusFactor = 0.25; // キャンバスの幅に対する半径の比率
+        const offsetFactor = 0.15; // 円の中心のオフセット比率
+
         const circles = [
-            { color: 'rgba(255, 0, 0, 1)', x: 0.3, y: 0.3, radius: 0.24, visible: true },  // Red
-            { color: 'rgba(0, 255, 0, 1)', x: 0.7, y: 0.3, radius: 0.24, visible: true },  // Green
-            { color: 'rgba(0, 0, 255, 1)', x: 0.5, y: 0.7, radius: 0.24, visible: true }  // Blue
+            { color: 'rgba(255, 0, 0, 1)', x: 0.5, y: 0.5 - offsetFactor, radius: radiusFactor, visible: true },  // Red (上)
+            { color: 'rgba(0, 255, 0, 1)', x: 0.5 - offsetFactor, y: 0.5 + offsetFactor, radius: radiusFactor, visible: true },  // Green (左下)
+            { color: 'rgba(0, 0, 255, 1)', x: 0.5 + offsetFactor, y: 0.5 + offsetFactor, radius: radiusFactor, visible: true }  // Blue (右下)
         ];
 
         function drawCircle(circle) {
