@@ -16,10 +16,10 @@
         }
 
         #gameCanvas {
-            width: 80%;
-            height: 80%;
-            max-width: 1440px;
-            max-height: 1440px;
+            width: 90%;
+            height: auto;
+            max-width: 800px;
+            aspect-ratio: 1; /* 正方形に保つ */
             border: 1px solid #000;
             background-color: #fff;
             margin-top: 20px;
@@ -63,24 +63,26 @@
         <button id="greenButton" class="button">グリーン</button>
         <button id="blueButton" class="button">ブルー</button>
     </div>
-    <script>const canvas = document.getElementById('gameCanvas');
+    <script>
+        const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // キャンバスの中心を基準に円の座標を調整
-        const canvasWidth = 1440;
-        const canvasHeight = 1440;
-        const centerX = canvasWidth / 2;
-        const centerY = canvasHeight / 2;
+        function resizeCanvas() {
+            const size = Math.min(window.innerWidth * 0.9, 800); // 画面幅の90%または800pxの小さい方
+            canvas.width = size;
+            canvas.height = size;
+            drawCircles();
+        }
 
         const circles = [
-            { color: 'rgba(255, 0, 0, 1)', x: centerX - 200, y: centerY - 200, radius: 350, visible: true },  // Red
-            { color: 'rgba(0, 255, 0, 1)', x: centerX + 200, y: centerY - 200, radius: 350, visible: true },  // Green
-            { color: 'rgba(0, 0, 255, 1)', x: centerX, y: centerY + 200, radius: 350, visible: true }  // Blue
+            { color: 'rgba(255, 0, 0, 1)', x: 0.3, y: 0.3, radius: 0.24, visible: true },  // Red
+            { color: 'rgba(0, 255, 0, 1)', x: 0.7, y: 0.3, radius: 0.24, visible: true },  // Green
+            { color: 'rgba(0, 0, 255, 1)', x: 0.5, y: 0.7, radius: 0.24, visible: true }  // Blue
         ];
 
         function drawCircle(circle) {
             ctx.beginPath();
-            ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+            ctx.arc(circle.x * canvas.width, circle.y * canvas.height, circle.radius * canvas.width, 0, Math.PI * 2);
             ctx.fillStyle = circle.color;
             ctx.globalCompositeOperation = 'lighter'; // 色を加算して合成
             ctx.fill();
@@ -106,15 +108,15 @@
         }
 
         function init() {
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-            drawCircles();
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
 
             document.getElementById('redButton').addEventListener('click', () => toggleCircleVisibility('rgba(255, 0, 0, 1)'));
             document.getElementById('greenButton').addEventListener('click', () => toggleCircleVisibility('rgba(0, 255, 0, 1)'));
             document.getElementById('blueButton').addEventListener('click', () => toggleCircleVisibility('rgba(0, 0, 255, 1)'));
         }
 
-        init();</script>
+        init();
+    </script>
 </body>
 </html>
