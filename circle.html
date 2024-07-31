@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Composition</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #gameCanvas {
+            width: 80%;
+            height: 80%;
+            max-width: 1440px;
+            max-height: 1440px;
+            border: 1px solid #000;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #redButton {
+            background-color: #FF0000;
+            color: white;
+        }
+
+        #greenButton {
+            background-color: #00FF00;
+            color: white;
+        }
+
+        #blueButton {
+            background-color: #0000FF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div class="button-container">
+        <button id="redButton" class="button">レッド</button>
+        <button id="greenButton" class="button">グリーン</button>
+        <button id="blueButton" class="button">ブルー</button>
+    </div>
+    <script>const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // キャンバスの中心を基準に円の座標を調整
+        const canvasWidth = 1440;
+        const canvasHeight = 1440;
+        const centerX = canvasWidth / 2;
+        const centerY = canvasHeight / 2;
+
+        const circles = [
+            { color: 'rgba(255, 0, 0, 1)', x: centerX - 200, y: centerY - 200, radius: 350, visible: true },  // Red
+            { color: 'rgba(0, 255, 0, 1)', x: centerX + 200, y: centerY - 200, radius: 350, visible: true },  // Green
+            { color: 'rgba(0, 0, 255, 1)', x: centerX, y: centerY + 200, radius: 350, visible: true }  // Blue
+        ];
+
+        function drawCircle(circle) {
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+            ctx.fillStyle = circle.color;
+            ctx.globalCompositeOperation = 'lighter'; // 色を加算して合成
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawCircles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            circles.forEach(circle => {
+                if (circle.visible) {
+                    drawCircle(circle);
+                }
+            });
+            ctx.globalCompositeOperation = 'source-over'; // 合成モードを元に戻す
+        }
+
+        function toggleCircleVisibility(color) {
+            const circle = circles.find(c => c.color === color);
+            if (circle) {
+                circle.visible = !circle.visible;
+                drawCircles();
+            }
+        }
+
+        function init() {
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            drawCircles();
+
+            document.getElementById('redButton').addEventListener('click', () => toggleCircleVisibility('rgba(255, 0, 0, 1)'));
+            document.getElementById('greenButton').addEventListener('click', () => toggleCircleVisibility('rgba(0, 255, 0, 1)'));
+            document.getElementById('blueButton').addEventListener('click', () => toggleCircleVisibility('rgba(0, 0, 255, 1)'));
+        }
+
+        init();</script>
+</body>
+</html>
