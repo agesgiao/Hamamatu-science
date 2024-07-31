@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>磁石のミニゲーム</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('images/background.png'); /* 背景画像を設定 */
+            background-size: cover; /* 画像をカバー表示 */
+            background-position: center; /* 画像を中央に表示 */
+            background-repeat: no-repeat; /* 画像の繰り返しを防止 */
+            position: relative;
+            margin: 0;
+            overflow: hidden; /* スクロールを防止 */
+            ;
+        }
+        #magnet {
+            width: 100px;
+            position: absolute;
+            cursor: pointer;
+            top: 200px; /* 初期位置を上部に設定 */
+            left: 200px; /* 初期位置を左部に設定 */
+            transition: transform 0.3s ease; /* トランジションを追加 */
+        }
+        .option {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            cursor: grab;
+            transition: transform 0.3s ease; /* トランジションを追加 */
+        }
+        .option:active {
+            cursor: grabbing;
+        }
+        #option1 { top: 500px; left: 50px; }  <!-- 正解の選択肢 -->
+        #option2 { top: 500px; left: 150px; }
+        #option3 { top: 500px; left: 150px; }
+        #option4 { top: 500px; left: 250px; }
+		#option5 { top: 500px; left: 350px; }
+    </style>
+</head>
+<body>
+
+<img id="magnet" src="images/5.PNG" alt="磁石">
+<img id="option1" class="option" src="images/1.PNG" alt="選択肢1">
+<img id="option3" class="option" src="images/2.PNG" alt="選択肢3">
+<img id="option4" class="option" src="images/4.PNG" alt="選択肢4">
+<img id="option5" class="option" src="images/3.PNG" alt="選択肢4">
+
+<script>
+    const magnet = document.getElementById('magnet');
+    const correctOption = document.getElementById('option1');
+    const options = document.querySelectorAll('.option');
+    let isDragging = false;
+    let draggedElement = null;
+
+    options.forEach(option => {
+        option.addEventListener('touchstart', (event) => {
+            isDragging = true;
+            draggedElement = event.target;
+            draggedElement.style.cursor = 'grabbing';
+        });
+    });
+
+    document.addEventListener('touchend', () => {
+        isDragging = false;
+        if (draggedElement) {
+            draggedElement.style.cursor = 'grab';
+        }
+    });
+
+    document.addEventListener('touchmove', (event) => {
+        if (isDragging && draggedElement) {
+            draggedElement.style.left = `${event.touches[0].clientX - draggedElement.width / 2}px`;
+            draggedElement.style.top = `${event.touches[0].clientY - draggedElement.height / 2}px`;
+            checkCollision();
+        }
+    });
+
+    function checkCollision() {
+        const magnetRect = magnet.getBoundingClientRect();
+        const correctOptionRect = correctOption.getBoundingClientRect();
+        const distance = Math.hypot(correctOptionRect.x - magnetRect.x, correctOptionRect.y - magnetRect.y);
+
+        // 磁石と正解の選択肢の距離が一定以下なら反応
+        if (distance < 100) { // ここで距離を調整
+            // 磁石が選択肢に吸着する動きをシミュレート
+            magnet.style.transform = `translate(${correctOptionRect.left + correctOptionRect.width / 2 - magnet.width / 2 - magnetRect.x}px, ${correctOptionRect.top + correctOptionRect.height / 2 - magnet.height / 2 - magnetRect.y}px)`;
+            correctOption.style.transform = "scale(1.1)"; // 正解の選択肢だけ拡大表示
+        } else {
+            magnet.style.transform = ""; // 磁石から拡大表示をリセット
+            correctOption.style.transform = ""; // 正解の選択肢から拡大表示をリセット
+        }
+    }
+</script>
+
+</body>
+</html>
