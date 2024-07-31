@@ -17,19 +17,26 @@
             position: relative;
             margin: 0;
             overflow: hidden; /* スクロールを防止 */
-            ;
+        }
+        #game-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
         }
         #magnet {
-            width: 100px;
+            width: 20vw; /* 画面幅の20% */
+            max-width: 100px; /* 最大幅を設定 */
             position: absolute;
             cursor: pointer;
-            top: 200px; /* 初期位置を上部に設定 */
-            left: 200px; /* 初期位置を左部に設定 */
+            top: 20%; /* 上から20%の位置 */
+            left: 50%; /* 左から50%の位置 */
+            transform: translateX(-50%); /* 真ん中に配置 */
             transition: transform 0.3s ease; /* トランジションを追加 */
         }
         .option {
-            width: 80px;
-            height: 80px;
+            width: 16vw; /* 画面幅の16% */
+            max-width: 80px; /* 最大幅を設定 */
+            height: auto;
             position: absolute;
             cursor: grab;
             transition: transform 0.3s ease; /* トランジションを追加 */
@@ -37,20 +44,22 @@
         .option:active {
             cursor: grabbing;
         }
-        #option1 { top: 500px; left: 50px; }  <!-- 正解の選択肢 -->
-        #option2 { top: 500px; left: 150px; }
-        #option3 { top: 500px; left: 150px; }
-        #option4 { top: 500px; left: 250px; }
-		#option5 { top: 500px; left: 350px; }
+        #option1 { top: 70%; left: 10%; }  /* 正解の選択肢 */
+        #option2 { top: 70%; left: 30%; }
+        #option3 { top: 70%; left: 50%; }
+        #option4 { top: 70%; left: 70%; }
+		#option5 { top: 70%; left: 90%; }
     </style>
 </head>
 <body>
 
-<img id="magnet" src="images/5.png" alt="磁石">
-<img id="option1" class="option" src="images/1.png" alt="選択肢1">
-<img id="option3" class="option" src="images/2.png" alt="選択肢3">
-<img id="option4" class="option" src="images/4.png" alt="選択肢4">
-<img id="option5" class="option" src="images/3.png" alt="選択肢4">
+<div id="game-area">
+    <img id="magnet" src="images/5.png" alt="磁石">
+    <img id="option1" class="option" src="images/1.png" alt="選択肢1">
+    <img id="option2" class="option" src="images/2.png" alt="選択肢2">
+    <img id="option3" class="option" src="images/3.png" alt="選択肢3">
+    <img id="option4" class="option" src="images/4.png" alt="選択肢4">
+</div>
 
 <script>
     const magnet = document.getElementById('magnet');
