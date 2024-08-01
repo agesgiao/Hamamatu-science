@@ -63,8 +63,7 @@
         <button id="greenButton" class="button">グリーン</button>
         <button id="blueButton" class="button">ブルー</button>
     </div>
-    <script>
-        const canvas = document.getElementById('gameCanvas');
+    <script>const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
@@ -78,9 +77,9 @@
         const offsetFactor = 0.15; // 円の中心のオフセット比率
 
         const circles = [
-            { color: 'rgba(255, 0, 0, 1)', x: 0.5, y: 0.5 - offsetFactor, radius: radiusFactor, visible: true },  // Red (上)
-            { color: 'rgba(0, 255, 0, 1)', x: 0.5 - offsetFactor, y: 0.5 + offsetFactor, radius: radiusFactor, visible: true },  // Green (左下)
-            { color: 'rgba(0, 0, 255, 1)', x: 0.5 + offsetFactor, y: 0.5 + offsetFactor, radius: radiusFactor, visible: true }  // Blue (右下)
+            { color: 'rgba(255, 0, 0, 1)', x: 0.5, y: 0.5 - offsetFactor, radius: radiusFactor, visible: false },  // Red (上)
+            { color: 'rgba(0, 255, 0, 1)', x: 0.5 - offsetFactor, y: 0.5 + offsetFactor, radius: radiusFactor, visible: false },  // Green (左下)
+            { color: 'rgba(0, 0, 255, 1)', x: 0.5 + offsetFactor, y: 0.5 + offsetFactor, radius: radiusFactor, visible: false }  // Blue (右下)
         ];
 
         function drawCircle(circle) {
@@ -119,7 +118,6 @@
             document.getElementById('blueButton').addEventListener('click', () => toggleCircleVisibility('rgba(0, 0, 255, 1)'));
         }
 
-        init();
-    </script>
+        init();</script>
 </body>
 </html>
