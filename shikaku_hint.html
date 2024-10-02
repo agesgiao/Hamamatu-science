@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天秤とみかんのドロップ</title>
+    <style>
+        h2 {
+            font-size: 50px; /* 文字サイズを大きくする */
+            text-align: center;
+        }
+        #background {
+            width: 750px;
+            height: 470px;
+            margin: 100px auto;
+            background-image: url('tenbin1.png'); /* 天秤の画像 */
+            background-size: cover;
+            position: relative;
+        }
+        #dropZone {
+            width: 300px;
+            height: 200px;
+           
+            position: absolute;
+            top: 1%;
+            right: 5%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0);
+            text-align: center;
+            line-height: 150px;
+        }
+        .draggable {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            cursor: grab;
+        }
+        #imageContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .dropped-mikan {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            transition: all 0.1s ease; /* アニメーションをスムーズに */
+        }        
+    </style>
+</head>
+<body>
+
+    <h2>天秤がつりあうようにみかんを右の皿に置いてね</h2>
+    <div id="background">
+        <div id="dropZone"> </div>
+    </div>
+
+    <div id="imageContainer">
+        <img id="mikan" src="mikan.png" alt="みかん" class="draggable" draggable="true">
+    </div>
+
+    
+</body>
+<script>
+
+// みかんをドロップするカウント
+let dropCount = 0;
+const maxDropCount = 3; // ドロップできるみかんの最大数
+
+// ドラッグできるみかんの画像を設定
+const mikanImage = document.getElementById('mikan');
+const dropZone = document.getElementById('dropZone');
+
+// ドラッグスタート時のイベント設定
+mikanImage.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text', e.target.id);
+});
+
+// ドロップゾーンに対するイベント設定
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault(); // デフォルト動作を無効にして、ドロップを有効化
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    
+    // みかんの数が3個を超えないように制限
+    if (dropCount >= maxDropCount) {
+        return; // 3個以上ドロップできない
+    }
+
+    const imageId = e.dataTransfer.getData('text');
+
+    // みかんがドロップされた場合の処理
+    if (imageId === 'mikan') {
+        dropCount++;
+
+        // みかんの画像をドロップゾーン内に追加（横並びに配置）
+        const droppedMikan = document.createElement('img');
+        droppedMikan.src = 'mikan.png';
+        droppedMikan.classList.add('dropped-mikan');
+        droppedMikan.style.top = '100px'; // 固定の高さ
+        droppedMikan.style.left = `${100 * (dropCount - 1)}px`; // 横に並べる
+        dropZone.appendChild(droppedMikan);
+
+        // みかんを3つドロップしたら天秤の画像を変更してみかんを右の皿に移動
+        if (dropCount === 3) {
+            document.getElementById('background').style.backgroundImage = "url('tenbin2.png')"; // 天秤が釣り合った状態の画像に変更
+
+            // ドロップゾーン内の全てのドロップされたみかんを右の皿に移動させるアニメーション
+            const droppedMikans = dropZone.querySelectorAll('.dropped-mikan');
+            droppedMikans.forEach((mikan, index) => {
+                mikan.style.transition = 'all 0s'; // アニメーションのための遷移時間
+                mikan.style.top = '160px'; // 皿の下に移動
+                mikan.style.left = `${100 * index}px`; // 横の位置はそのまま
+            });
+        }
+    }
+});
+
+</script>
+</html>
