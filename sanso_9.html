@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像選択テスト</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('images/background.png'); /* 背景画像を指定 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: white; /* タイトルの色を白に */
+        }
+
+        #images {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* 2つ並んだら折り返す */
+            gap: 10px; /* 画像間の余白を設定 */
+            max-width: 400px; /* 最大幅を設定して2つで折り返す */
+        }
+
+        .image {
+            display: inline-block;
+            margin: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            opacity: 0.5; /* デフォルトで少し暗くする */
+            transition: opacity 0.3s; /* マウス操作時のアニメーション */
+            max-width: 150px; /* 画像の最大幅を指定 */
+            max-height: 150px; /* 画像の最大高さを指定 */
+            object-fit: contain; /* アスペクト比を維持して画像を収める */
+        }
+
+        .selected {
+            border: 2px solid blue;
+            opacity: 1; /* 選択された画像は明るくする */
+        }
+
+        .image:hover {
+            opacity: 1; /* マウスが乗った時に明るくなる */
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: white; /* 結果の色を白に設定 */
+        }
+
+        /* オーバーレイのスタイル */
+        #overlay {
+            display: none; /* 初期状態では非表示 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* 最前面に表示 */
+        }
+
+            #overlay img {
+                max-width: 80%;
+                max-height: 80%;
+            }
+    </style>
+</head>
+<body>
+
+    <h1></h1>
+
+    <div id="images">
+        <img src="images/1.png" alt="A" class="image" data-id="A">
+        <img src="images/2.png" alt="B" class="image" data-id="B">
+        <img src="images/3.png" alt="C" class="image" data-id="C">
+        <img src="images/4.png" alt="D" class="image" data-id="D">
+    </div>
+
+    <button id="startButton">開始</button>
+
+    <p id="result"></p>
+
+    <!-- オーバーレイ部分 -->
+    <div id="overlay">
+        <img src="" alt="結果画像" id="overlayImage">
+    </div>
+
+    <script>const images = document.querySelectorAll('.image');
+        const result = document.getElementById('result');
+        const overlay = document.getElementById('overlay');
+        const overlayImage = document.getElementById('overlayImage'); // オーバーレイ画像
+        const correctSelection = ['A', 'C', 'D'];
+
+        let selectedImages = [];
+
+        images.forEach(image => {
+            image.addEventListener('click', () => {
+                const imageId = image.getAttribute('data-id');
+
+                // 画像がすでに選択されている場合、選択を解除
+                if (selectedImages.includes(imageId)) {
+                    selectedImages = selectedImages.filter(id => id !== imageId);
+                    image.classList.remove('selected');
+                } else if (selectedImages.length < 3) {  // 最大3つまで選択可能
+                    selectedImages.push(imageId);
+                    image.classList.add('selected');
+                }
+            });
+        });
+
+        document.getElementById('startButton').addEventListener('click', () => {
+            if (selectedImages.length === 3) {
+                // 選択された画像が正しいかどうかをチェック
+                const isSuccess = correctSelection.every(item => selectedImages.includes(item));
+                if (isSuccess) {
+                    // 成功の場合、オーバーレイに成功画像を設定して表示
+
+                    overlayImage.src = 'images/OK.png';
+                    overlay.style.display = 'flex';
+                    result.textContent = "";
+                } else {
+                    // 失敗の場合、オーバーレイに失敗画像を設定して表示
+                    overlayImage.src = 'images/NG.png';
+                    overlay.style.display = 'flex';
+                    result.textContent = "";
+                }
+            } else {
+                result.textContent = "3つの画像を選択してください";
+            }
+        });
+
+        // オーバーレイをクリックしたら非表示にする
+        overlay.addEventListener('click', () => {
+            overlay.style.display = 'none';
+        });</script>
+
+</body>
+</html>
+
