@@ -1,127 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gravity Game with Tree</title>
+    <title>真空状態での落下</title>
     <style>
         body {
+            margin: 0;
+            overflow: hidden; /* スクロールバーを隠す */
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
+            justify-content: center;
+            height: 100vh; /* 画面中央に配置 */
+            background-image: url('gravity-haikei.png'); /* 背景画像のURLを設定 */
+            background-size: cover; /* 画像をカバー */
+            background-position: center; /* 画像の位置を中央に設定 */
         }
-
-        #header {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        #game-container {
-            position: relative;
-            width: 300px;
-            height: 430px;
-            border: 1px solid #ccc;
-            overflow: hidden;
-        }
-
-        #tree {
+        .fallingObject {
             position: absolute;
+            top: 0;
             left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 130%; /* 木の画像をコンテナの幅に合わせる */
-            height: auto;
+            transform: translateX(-50%); /* 中心に揃える */
         }
-
-        .fruit {
-            position: absolute;
-            width: 30%; /* フルーツのサイズを調整 */
+        #object1 {
+            width: 15vw; /* 大きい物体の幅 */
+            height: 15vw; /* 大きい物体の高さ */
+            max-width: 100px; /* 最大幅 */
+            max-height: 100px; /* 最大高さ */
+            background-image: url('hammer.png'); /* 画像のURLを設定 */
+            background-size: cover; /* 画像をカバー */
+        }
+        #object2 {
+            width: 15vw; /* 大きい物体の幅 */
+            height: 15vw; /* 大きい物体の高さ */
+            max-width: 100px; /* 最大幅 */
+            max-height: 100px; /* 最大高さ */
+            background-image: url('wing.png'); /* 画像のURLを設定 */
+            background-size: cover; /* 画像をカバー */
+        }
+        #startButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 5vw; /* ボタンのフォントサイズ */
             cursor: pointer;
         }
 
-        #fruit1 {
-            top: 20%;
-            left: 25%;
-        }
-
-        #fruit2 {
-            top: 20%;
-            left: 65%;
-        }
-
-        #fruit3 {
-            top: 35%;
-            left: 5%;
-        }
-
-        #fruit4 {
-            top: 50%;
-            left: 5%;
-        }
-
-        #fruit5 {
-            top: 35%;
-            left: 50%;
-        }
-
-        #fruit6 {
-            top: 45%;
-            left: 70%;
+        /* スマホ向けのスタイル */
+        @media (max-width: 600px) {
+            #startButton {
+                padding: 15px 30px; /* ボタンのパディングを大きくする */
+            }
         }
     </style>
 </head>
 <body>
-    <div id="header">
-        <h1>くだものをタップしてみよう！</h1>
-        <p>せいかいの「くだもの」だけ木からおちるよ</p>
-    </div>
-
-    <div id="game-container">
-        <img id="tree" src="images/ki.png" alt="Tree">
-        <img id="fruit1" class="fruit" src="images/itigo.PNG" alt="Fruit 1">
-        <img id="fruit2" class="fruit" src="images/ringo.PNG" alt="Fruit 2">
-        <img id="fruit3" class="fruit" src="images/budo.PNG" alt="Fruit 3">
-        <img id="fruit4" class="fruit" src="images/banana.PNG" alt="Fruit 4">
-        <img id="fruit5" class="fruit" src="images/suika.PNG" alt="Fruit 5">
-        <img id="fruit6" class="fruit" src="images/sakuranbo.PNG" alt="Fruit 6">
-    </div>
-
+    <div id="object1" class="fallingObject"></div>
+    <div id="object2" class="fallingObject" style="left: 60%;"></div> <!-- 物体2の位置を調整 -->
+    
+    <button id="startButton">落下を開始</button>
+    
     <script>
-        const fruits = document.querySelectorAll('.fruit');
-        const gravity = 0.5;
-        const correctFruitId = 'fruit2'; // 正解の果物IDを指定
-        let hasDropped = false;
+        const object1 = document.getElementById('object1');
+        const object2 = document.getElementById('object2');
+        const startButton = document.getElementById('startButton');
+        let position = 0; // 初期位置
+        let velocity = 0; // 初期速度
+        const acceleration = 0.2; // 加速度（重力の強さ）
+        let falling = false; // 落下状態のフラグ
 
-        fruits.forEach(fruit => {
-            fruit.addEventListener('click', () => {
-                if (hasDropped) return; // すでに果物が落ちている場合は何もしない
+        function fall() {
+            velocity += acceleration; // 速度に加速度を加える
+            position += velocity; // 現在の速度で位置を更新
+            object1.style.top = position + 'px';
+            object2.style.top = position + 'px'; // 同じ位置に設定
 
-                if (fruit.id === correctFruitId) {
-                    hasDropped = true; // 1つの果物が落ちたことを記録
-                    let positionY = parseFloat(getComputedStyle(fruit).top);
-                    let velocityY = 0;
+            // 画面の下まで行ったら、落下を停止
+            if (position < window.innerHeight) {
+                requestAnimationFrame(fall); // アニメーションを続ける
+            } else {
+                // 落下が終了したらボタンを再表示し、位置をリセット
+                startButton.style.display = 'block'; // ボタンを再表示
+                falling = false; // 落下状態をリセット
+                position = 0; // 位置を初期化
+                velocity = 0; // 速度を初期化
+                object1.style.top = position + 'px';
+                object2.style.top = position + 'px'; // 物体の位置を初期化
+            }
+        }
 
-                    function drop() {
-                        velocityY += gravity;
-                        positionY += velocityY;
-
-                        // 果物が地面に着地したら落下を止める
-                        if (positionY >= 350) {
-                            positionY = 350;
-                            return;
-                        }
-
-                        fruit.style.top = positionY + 'px';
-                        requestAnimationFrame(drop);
-                    }
-
-                    drop();
-                }
-            });
+        startButton.addEventListener('click', () => {
+            if (!falling) { // 落下中でない場合のみ開始
+                startButton.style.display = 'none'; // ボタンを隠す
+                position = 0; // 初期位置にリセット
+                velocity = 0; // 初期速度をリセット
+                falling = true; // 落下状態にする
+                fall(); // 落下を開始
+            }
         });
     </script>
 </body>
