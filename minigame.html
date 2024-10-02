@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しりとりゲーム</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 20px;
+        }
+        img {
+            max-width: 50%;
+            height: auto;
+        }
+        .choices {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .choice-button {
+            margin: 0 10px;
+            padding: 0;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+        .feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            font-weight: bold;
+            display: none; /* 初期状態では非表示 */
+        }
+        .feedback img {
+            max-width: 500px; /* 画像サイズを調整 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>しりとりゲーム</h1>
+        <img src="mijinko.png" alt="問題画像" id="quiz-image">
+        
+        <div class="choices">
+            <button class="choice-button" onclick="checkAnswer('A')"><img src="smallfish.png" alt="選択肢A"></button>
+            <button class="choice-button" onclick="checkAnswer('B')"><img src="choice-image2.jpg" alt="選択肢B"></button>
+            <button class="choice-button" onclick="checkAnswer('C')"><img src="choice-image3.jpg" alt="選択肢C"></button>
+        </div>
+
+        <div id="feedback" class="feedback">
+            <!-- 正解時と不正解時の画像をここに指定 -->
+            <img id="correct-image" src="maru.png" alt="正解画像" style="display:none;">
+            <img id="incorrect-image" src="batu.png" alt="不正解画像" style="display:none;">
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                image: 'mijinko.png',
+                choices: [
+                    { img: 'smallfish.png', answer: 'A' },
+                    { img: 'images/4.png', answer: 'B' },
+                    { img: 'images/5.png', answer: 'C' }
+                ],
+                correctAnswer: 'A'
+            },
+            {
+                image: 'smallfish.png',
+                choices: [
+                    { img: 'images/1.png', answer: 'D' },
+                    { img: 'images/2.png', answer: 'E' },
+                    { img: 'images/6.png', answer: 'F' }
+                ],
+                correctAnswer: 'B'
+            },
+            {
+                image: 'images/3.png',
+                choices: [
+                    { img: 'images/3.png', answer: 'G' },
+                    { img: 'images/4.png', answer: 'H' },
+                    { img: 'images/5.png', answer: 'I' }
+                ],
+                correctAnswer: 'A'
+            }
+            // 追加の問題はここに追加します
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function updateQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('quiz-image').src = question.image;
+            const buttons = document.querySelectorAll('.choice-button');
+            buttons.forEach((button, index) => {
+                button.querySelector('img').src = question.choices[index].img;
+                button.setAttribute('data-answer', question.choices[index].answer);
+            });
+            document.getElementById('feedback').style.display = 'none'; // フィードバックを非表示
+        }
+
+        function checkAnswer(selected) {
+            const correctAnswer = questions[currentQuestionIndex].correctAnswer;
+            const feedback = document.getElementById('feedback');
+            const correctImage = document.getElementById('correct-image');
+            const incorrectImage = document.getElementById('incorrect-image');
+
+            if (selected === correctAnswer) {
+                correctImage.style.display = 'block'; // 正解の画像を表示
+                feedback.style.display = 'block'; // フィードバックを表示
+
+                setTimeout(() => {
+                    correctImage.style.display = 'none'; // 1秒後に画像を非表示
+                    feedback.style.display = 'none'; // フィードバックを非表示
+
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questions.length) {
+                        updateQuestion();
+                    } else {
+                        feedback.textContent = '全ての問題が終了しました！';
+                        feedback.style.color = 'black'; // 終了メッセージの色
+                        feedback.style.fontSize = '24px'; // 終了メッセージのフォントサイズ
+                        currentQuestionIndex = 0; // リセットする場合
+                    }
+                }, 1000); // 1秒後に次の問題へ
+            } else {
+                incorrectImage.style.display = 'block'; // 不正解の画像を表示
+                feedback.style.display = 'block'; // フィードバックを表示
+
+                setTimeout(() => {
+                    incorrectImage.style.display = 'none'; // 3秒後に画像を非表示
+                    feedback.style.display = 'none'; // フィードバックを非表示
+                }, 1000); // 3秒後に非表示
+            }
+        }
+
+        updateQuestion(); // 初期問題の設定
+    </script>
+</body>
+</html>
