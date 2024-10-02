@@ -50,7 +50,7 @@
 <body>
 
     <h2>天秤がつりあうようにみかんを右の皿に置いてね</h2>
-    <div id="images/background">
+    <div id="images/background.png">
         <div id="dropZone"> </div>
     </div>
 
@@ -104,7 +104,7 @@ dropZone.addEventListener('drop', (e) => {
 
         // みかんを3つドロップしたら天秤の画像を変更してみかんを右の皿に移動
         if (dropCount === 3) {
-            document.getElementById('background').style.backgroundImage = "url('tenbin2.png')"; // 天秤が釣り合った状態の画像に変更
+            document.getElementById('background').style.backgroundImage = "url('images/tenbin2.png')"; // 天秤が釣り合った状態の画像に変更
 
             // ドロップゾーン内の全てのドロップされたみかんを右の皿に移動させるアニメーション
             const droppedMikans = dropZone.querySelectorAll('.dropped-mikan');
