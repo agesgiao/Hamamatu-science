@@ -3,6 +3,167 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>でんきのもんだい</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('images/default-background.png'); /* 最初の背景画像 */
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 50px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .image-container img {
+      width: 20vw;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+
+    .drop-zone {
+      width: 30vw;
+      height: 30vw;
+      border: 2px dashed #ccc;
+      display: inline-block;
+      text-align: center;
+      font-size: 4vw;
+      color: #aaa;
+      position: relative;
+      margin-bottom: 10vh;
+    }
+
+    .drop-zone img {
+      max-width: 100%;
+      max-height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .drop-zone.correct {
+      border-color: green;
+    }
+
+    .drop-zone.wrong {
+      border-color: red;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 5vw;
+    }
+
+    @media (min-width: 768px) {
+      .drop-zone {
+        width: 150px;
+        height: 150px;
+        font-size: 14px;
+      }
+
+      .image-container img {
+        width: 100px;
+      }
+
+      button {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 画像をドロップする枠（中央） -->
+  <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" id="drop-zone">
+    ドラッグしてここにドロップ
+  </div>
+
+  <!-- 4つの選択肢（画面の下部） -->
+  <div class="container">
+    <div class="image-container">
+      <img src="images/gomu.png" draggable="true" ondragstart="drag(event)" id="choice1" alt="Choice 1">
+      <img src="images/note.png" draggable="true" ondragstart="drag(event)" id="choice2" alt="Choice 2">
+      <img src="images/pb.png" draggable="true" ondragstart="drag(event)" id="choice3" alt="Choice 3">
+      <img src="images/ito.png" draggable="true" ondragstart="drag(event)" id="choice4" alt="Choice 4">
+    </div>
+  </div>
+
+  <button onclick="checkAnswer()">実行</button>
+
+  <script>
+    let selectedChoice = null;  // ドロップされた選択肢を保持する変数
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      const data = event.dataTransfer.getData("text");
+      const droppedImage = document.getElementById(data);
+      const dropZone = event.target;
+
+      dropZone.innerHTML = '';
+      const clonedImage = droppedImage.cloneNode(true);
+      dropZone.appendChild(clonedImage);
+
+      clonedImage.style.maxWidth = "100%";
+      clonedImage.style.maxHeight = "100%";
+      clonedImage.style.position = "absolute";
+      clonedImage.style.top = "0";
+      clonedImage.style.left = "0";
+
+      selectedChoice = data;
+    }
+
+    function checkAnswer() {
+      const dropZone = document.getElementById('drop-zone');
+
+      if (selectedChoice === 'choice4') {
+        document.body.style.backgroundImage = "url('images/correct-background.png')";
+        dropZone.classList.add('correct');
+        alert("正解です！");
+      } else {
+        dropZone.classList.add('wrong');
+        alert("不正解です。もう一度試してください。");
+        resetDropZone();
+      }
+    }
+
+    function resetDropZone() {
+      const dropZone = document.getElementById('drop-zone');
+      dropZone.innerHTML = 'ドラッグしてここにドロップ';
+      dropZone.classList.remove('correct', 'wrong');
+      selectedChoice = null;
+    }
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ドラッグ＆ドロップで背景切り替え</title>
   <style>
     body {
