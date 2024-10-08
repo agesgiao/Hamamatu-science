@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -8,85 +8,86 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .vegetable {
-            width: 80px;
-            height: 80px;
+            width: 16vw; /* ビューポート幅に応じてサイズを変更 */
+            height: auto; /* 画像のアスペクト比を保持 */
             margin: 10px;
-            padding: 10px;
-            cursor: pointer; /* ポインタを表示 */
-            position: absolute; /* 絶対位置 */
-            z-index: 10; /* 野菜のレイヤーを上に */
+            cursor: pointer;
+            position: absolute;
+            z-index: 10;
         }
 
         #tank {
-            width: 300px; /* 水槽の幅 */
-            height: 400px; /* 水槽の高さ */
+            width: 70vw; /* タブレットに合わせて水槽の幅を調整 */
+            height: 55vh; /* 水槽の高さを調整 */
             background-image: url('images/tank.png'); /* 水槽の画像パス */
-            background-size: 100% 100%; /* 画像を水槽のサイズにフィットさせる */
-            background-repeat: no-repeat; /* 画像の繰り返しを無効にする */
-            border: none; /* ボーダーを削除 */
-            margin: 20px auto; /* 中央に配置 */
-            position: relative; /* 相対位置 */
-            overflow: hidden; /* 内部のものがはみ出さないように */
-            z-index: 1; /* 水槽のレイヤーを下に */
+            background-size: contain;
+            background-repeat: no-repeat;
+            border: none;
+            margin: 10vh auto; /* 中央に配置し、上下に余白を作成 */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        p {
+            font-size: 4vw; /* テキストをデバイスに合わせた大きさに調整 */
+        }
     </style>
 </head>
 <body>
-    <h1>×の手がかり1</h1>
-    <p>野菜をクリックしてみよう。</p>
+    <h1>どの野菜が浮くか沈むか？</h1>
 
     <div id="vegetableList">
-            <img class="vegetable" id="きゅうり" src="images/1b.png" alt="きゅうり" style="top: 50px; left: 40px;">
-            <img class="vegetable" id="きゃべつ" src="images/2b.png" alt="きゃべつ" style="top: 50px; left: 110px;">
-            <img class="vegetable" id="れんこん" src="images/3b.png" alt="れんこん" style="top: 50px; left: 180px;">
-            <img class="vegetable" id="かぼちゃ" src="images/4b.png" alt="かぼちゃ" style="top: 50px; left: 250px;">
-        </div>
+        <img class="vegetable" id="きゅうり" src="images/1b.PNG" alt="きゅうり" style="top: 10vh; left: 10vw;">
+        <img class="vegetable" id="きゃべつ" src="images/2b.PNG" alt="きゃべつ" style="top: 10vh; left: 30vw;">
+        <img class="vegetable" id="れんこん" src="images/3b.PNG" alt="れんこん" style="top: 10vh; left: 50vw;">
+        <img class="vegetable" id="かぼちゃ" src="images/4b.PNG" alt="かぼちゃ" style="top: 10vh; left: 70vw;">
+    </div>
 
     <div id="tank">
         <!-- 水槽 -->
     </div>
+    <p>野菜をタップしてください。</p>
 
     <script>const sinkingVegetables = ['れんこん']; // 沈む野菜
         const floatingVegetables = ['きゃべつ', 'きゅうり', 'かぼちゃ']; // 浮く野菜
 
         document.querySelectorAll('.vegetable').forEach(vegetable => {
             vegetable.addEventListener('click', function () {
-                const vegetableId = this.id; // クリックした野菜のIDを取得
+                const vegetableId = this.id;
                 const tank = document.getElementById('tank');
 
-                // アニメーションを設定
-                let yPos = parseInt(this.style.top); // 現在のy座標を取得
+                let yPos = parseInt(this.style.top);
                 const targetY = sinkingVegetables.includes(vegetableId)
-                    ? tank.offsetTop + tank.offsetHeight - this.offsetHeight // 沈む場合
-                    : tank.offsetTop; // 浮く場合
+                    ? tank.offsetTop + tank.offsetHeight - this.offsetHeight
+                    : tank.offsetTop;
 
                 const interval = setInterval(() => {
-                    // スピード調整
-                    yPos += (targetY - yPos) * 0.02; // y座標を0.2ずつ調整
+                    yPos += (targetY - yPos) * 0.02;
                     this.style.top = `${yPos}px`;
 
-                    // 目標位置に到達したらアニメーションを終了
                     if (Math.abs(yPos - targetY) < 1) {
                         this.style.top = `${targetY}px`;
                         clearInterval(interval);
 
-                        // 浮く場合のふわふわ動き
                         if (floatingVegetables.includes(vegetableId)) {
-                            const waveAmplitude = 2; // ふわふわの振幅を調整
-                            const waveSpeed = 0.01; // ふわふわの速度
+                            const waveAmplitude = 2;
+                            const waveSpeed = 0.01;
                             let stopFwa = setTimeout(() => {
                                 clearInterval(fwaInterval);
-                            }, 2000); // 2秒後にふわふわを停止
+                            }, 2000);
 
-                            // ふわふわのアニメーションを開始
                             let fwaInterval = setInterval(() => {
                                 this.style.transform = `translateY(${Math.sin(Date.now() * waveSpeed) * waveAmplitude}px)`;
-                            }, 20); // 20ミリ秒ごとに更新
+                            }, 20);
                         }
                     }
-                }, 20); // 20ミリ秒ごとに更新
+                }, 20);
             });
         });</script>
 </body>
