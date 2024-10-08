@@ -14,7 +14,7 @@
       transition: background-image 0.5s ease-in-out;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-end; /* 下部に配置 */
       height: 100vh;
       flex-direction: column;
     }
@@ -22,9 +22,7 @@
     .container {
       display: flex;
       justify-content: center;
-      margin-bottom: 50px;
-      position: absolute;
-      bottom: 0;
+      margin-bottom: 10px;
       width: 100%;
     }
 
@@ -42,8 +40,10 @@
       text-align: center;
       font-size: 4vw;
       color: #aaa;
-      position: relative;
-      margin-bottom: 10vh;
+      position: absolute;
+      top: 50%; /* 画面の真ん中に配置 */
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .drop-zone img {
@@ -63,10 +63,11 @@
     }
 
     button {
-      display: block;
-      margin: 20px auto;
+      margin: 10px auto;
       padding: 10px 20px;
       font-size: 5vw;
+      z-index: 10;
+      position: relative;
     }
 
     @media (min-width: 768px) {
