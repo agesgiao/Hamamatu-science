@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      background-image: url('default-background.png'); /* 最初の背景画像 */
+      background-image: url('images/default-background.png'); /* 最初の背景画像 */
       background-size: cover;
       background-position: center;
       transition: background-image 0.5s ease-in-out;
@@ -81,10 +81,10 @@
   <!-- 4つの選択肢（画面の下部） -->
   <div class="container">
     <div class="image-container">
-      <img src="gomu.png" draggable="true" ondragstart="drag(event)" id="choice1" alt="Choice 1">
-      <img src="note.png" draggable="true" ondragstart="drag(event)" id="choice2" alt="Choice 2">
-      <img src="pb.png" draggable="true" ondragstart="drag(event)" id="choice3" alt="Choice 3">
-      <img src="ito.png" draggable="true" ondragstart="drag(event)" id="choice4" alt="Choice 4">
+      <img src="images/gomu.png" draggable="true" ondragstart="drag(event)" id="choice1" alt="Choice 1">
+      <img src="images/note.png" draggable="true" ondragstart="drag(event)" id="choice2" alt="Choice 2">
+      <img src="images/pb.png" draggable="true" ondragstart="drag(event)" id="choice3" alt="Choice 3">
+      <img src="images/ito.png" draggable="true" ondragstart="drag(event)" id="choice4" alt="Choice 4">
     </div>
   </div>
 
@@ -130,7 +130,7 @@
       const dropZone = document.getElementById('drop-zone');
 
       if (selectedChoice === 'choice4') {  // choice4が正解の場合
-        document.body.style.backgroundImage = "url('correct-background.png')";
+        document.body.style.backgroundImage = "url('images/correct-background.png')";
         dropZone.classList.add('correct');
         alert("正解です！");
       } else {
