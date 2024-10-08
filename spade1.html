@@ -14,7 +14,7 @@
       transition: background-image 0.5s ease-in-out;
       display: flex;
       justify-content: center;
-      align-items: flex-end; /* 下部に配置 */
+      align-items: center;
       height: 100vh;
       flex-direction: column;
     }
@@ -22,10 +22,10 @@
     .container {
       display: flex;
       justify-content: center;
-      margin-bottom: 50px; /* 実行ボタンとのスペース */
+      margin-bottom: 50px;
+      position: absolute;
+      bottom: 0;
       width: 100%;
-      position: absolute; /* 下側に配置するために絶対位置を使用 */
-      bottom: 10%; /* 下からの位置調整 */
     }
 
     .image-container img {
@@ -42,10 +42,8 @@
       text-align: center;
       font-size: 4vw;
       color: #aaa;
-      position: absolute;
-      top: 70%; /* 画面の真ん中に配置 */
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
+      margin-bottom: 10vh;
     }
 
     .drop-zone img {
@@ -65,11 +63,10 @@
     }
 
     button {
-      margin: 10px auto;
+      display: block;
+      margin: 20px auto;
       padding: 10px 20px;
       font-size: 5vw;
-      z-index: 10;
-      position: relative;
     }
 
     @media (min-width: 768px) {
@@ -157,51 +154,6 @@
       dropZone.innerHTML = 'ドラッグしてここにドロップ';
       dropZone.classList.remove('correct', 'wrong');
       selectedChoice = null;
-    }
-
-    // タッチデバイスのためのイベントリスナー
-    const images = document.querySelectorAll('.image-container img');
-    images.forEach(img => {
-      img.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        const target = touch.target;
-        const id = target.id;
-
-        target.style.position = 'absolute';
-        target.style.left = `${touch.clientX - target.offsetWidth / 2}px`;
-        target.style.top = `${touch.clientY - target.offsetHeight / 2}px`;
-
-        document.addEventListener('touchmove', (e) => {
-          const touchMove = e.touches[0];
-          target.style.left = `${touchMove.clientX - target.offsetWidth / 2}px`;
-          target.style.top = `${touchMove.clientY - target.offsetHeight / 2}px`;
-        });
-
-        document.addEventListener('touchend', (e) => {
-          const dropZone = document.getElementById('drop-zone');
-          const dropZoneRect = dropZone.getBoundingClientRect();
-          const touchEnd = e.changedTouches[0];
-
-          // ドロップゾーン内にドロップした場合
-          if (
-            touchEnd.clientX >= dropZoneRect.left &&
-            touchEnd.clientX <= dropZoneRect.right &&
-            touchEnd.clientY >= dropZoneRect.top &&
-            touchEnd.clientY <= dropZoneRect.bottom
-          ) {
-            dropZone.dispatchEvent(new Event('drop', { bubbles: true, cancelable: true }));
-            dropZone.dispatchEvent(new Event('dragover', { bubbles: true, cancelable: true }));
-          }
-
-          target.style.position = '';
-          resetImagePosition(target);
-        });
-      });
-    });
-
-    function resetImagePosition(img) {
-      img.style.left = '';
-      img.style.top = '';
     }
   </script>
 
