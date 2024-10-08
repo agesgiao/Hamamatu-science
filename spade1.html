@@ -158,6 +158,51 @@
       dropZone.classList.remove('correct', 'wrong');
       selectedChoice = null;
     }
+
+    // タッチデバイスのためのイベントリスナー
+    const images = document.querySelectorAll('.image-container img');
+    images.forEach(img => {
+      img.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        const target = touch.target;
+        const id = target.id;
+
+        target.style.position = 'absolute';
+        target.style.left = `${touch.clientX - target.offsetWidth / 2}px`;
+        target.style.top = `${touch.clientY - target.offsetHeight / 2}px`;
+
+        document.addEventListener('touchmove', (e) => {
+          const touchMove = e.touches[0];
+          target.style.left = `${touchMove.clientX - target.offsetWidth / 2}px`;
+          target.style.top = `${touchMove.clientY - target.offsetHeight / 2}px`;
+        });
+
+        document.addEventListener('touchend', (e) => {
+          const dropZone = document.getElementById('drop-zone');
+          const dropZoneRect = dropZone.getBoundingClientRect();
+          const touchEnd = e.changedTouches[0];
+
+          // ドロップゾーン内にドロップした場合
+          if (
+            touchEnd.clientX >= dropZoneRect.left &&
+            touchEnd.clientX <= dropZoneRect.right &&
+            touchEnd.clientY >= dropZoneRect.top &&
+            touchEnd.clientY <= dropZoneRect.bottom
+          ) {
+            dropZone.dispatchEvent(new Event('drop', { bubbles: true, cancelable: true }));
+            dropZone.dispatchEvent(new Event('dragover', { bubbles: true, cancelable: true }));
+          }
+
+          target.style.position = '';
+          resetImagePosition(target);
+        });
+      });
+    });
+
+    function resetImagePosition(img) {
+      img.style.left = '';
+      img.style.top = '';
+    }
   </script>
 
 </body>
