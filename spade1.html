@@ -14,20 +14,36 @@
       transition: background-image 0.5s ease-in-out;
       display: flex;
       justify-content: center;
-      align-items: center; /* 中央に配置 */
+      align-items: flex-end; /* 下部に配置 */
       height: 100vh;
       flex-direction: column;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 50px; /* 実行ボタンとのスペース */
+      width: 100%;
+      position: absolute; /* 下側に配置するために絶対位置を使用 */
+      bottom: 20%; /* 下からの位置調整 */
+    }
+
+    .image-container img {
+      width: 20vw;
+      cursor: pointer;
+      margin: 0 10px;
     }
 
     .drop-zone {
       width: 30vw;
       height: 30vw;
       border: 2px dashed #ccc;
+      display: inline-block;
       text-align: center;
       font-size: 4vw;
       color: #aaa;
       position: absolute;
-      top: 70%; /* 画面の真ん中に配置 */
+      top: 50%; /* 画面の真ん中に配置 */
       left: 50%;
       transform: translate(-50%, -50%);
     }
@@ -46,21 +62,6 @@
 
     .drop-zone.wrong {
       border-color: red;
-    }
-
-    .container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 50px; /* 実行ボタンとのスペース */
-      width: 100%;
-      position: absolute; /* 下側に配置するために絶対位置を使用 */
-      bottom: 10%; /* 下からの位置調整 */
-    }
-
-    .image-container img {
-      width: 20vw;
-      cursor: pointer;
-      margin: 0 10px;
     }
 
     button {
@@ -156,7 +157,6 @@
       dropZone.innerHTML = 'ドラッグしてここにドロップ';
       dropZone.classList.remove('correct', 'wrong');
       selectedChoice = null;
-
     }
   </script>
 
