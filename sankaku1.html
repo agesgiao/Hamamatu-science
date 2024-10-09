@@ -18,12 +18,12 @@
             max-width: 50%;
             height: auto;
         }
-		
-		#quiz-image {
-    	max-width: 30%; /* 画像の最大幅を50%に設定 */
-    	height: auto; /* アスペクト比を維持 */
-		}
-		
+
+        #quiz-image {
+            max-width: 30%; /* 画像の最大幅を30%に設定 */
+            height: auto; /* アスペクト比を維持 */
+        }
+
         .choices {
             display: flex;
             justify-content: center;
@@ -48,6 +48,23 @@
         .feedback img {
             max-width: 500px; /* 画像サイズを調整 */
         }
+        #game-over-background {
+            display: none; /* 初期状態で非表示 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8); /* 背景を半透明に */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* 他の要素より前面に表示 */
+        }
+        #game-over-background img {
+            max-width: 100%; /* 背景画像のサイズ調整 */
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -63,12 +80,17 @@
 
         <div id="feedback" class="feedback">
             <!-- 正解時と不正解時の画像をここに指定 -->
-            <img id="correct-image" src="images/maru.png" alt="正解画像" style="display:none;">
+            <img id="correct-image" src="imgaes/maru.png" alt="正解画像" style="display:none;">
             <img id="incorrect-image" src="images/batu.png" alt="不正解画像" style="display:none;">
         </div>
     </div>
 
-    <script>
+    <!-- 全問題終了後に表示する背景画像 -->
+    <div id="game-over-background">
+        <img src="images/last.png" alt="ゲーム終了画面">
+    </div>
+
+        <script>
         const questions = [
             {
                 image: 'images/kusa.png',
@@ -94,6 +116,12 @@
 
         let currentQuestionIndex = 0;
 
+        // 初期化時にgame-over-backgroundを明示的に非表示にする
+        function initGame() {
+            document.getElementById('game-over-background').style.display = 'none';
+            updateQuestion();
+        }
+
         function updateQuestion() {
             const question = questions[currentQuestionIndex];
             document.getElementById('quiz-image').src = question.image;
@@ -106,41 +134,44 @@
         }
 
         function checkAnswer(selected) {
-            const correctAnswer = questions[currentQuestionIndex].correctAnswer;
-            const feedback = document.getElementById('feedback');
-            const correctImage = document.getElementById('correct-image');
-            const incorrectImage = document.getElementById('incorrect-image');
+    	const correctAnswer = questions[currentQuestionIndex].correctAnswer;
+    	const feedback = document.getElementById('feedback');
+    	const correctImage = document.getElementById('correct-image');
+    	const incorrectImage = document.getElementById('incorrect-image');
 
-            if (selected === correctAnswer) {
-                correctImage.style.display = 'block'; // 正解の画像を表示
-                feedback.style.display = 'block'; // フィードバックを表示
+    	if (selected === correctAnswer) {
+        	correctImage.style.display = 'block'; // 正解の画像を表示
+        	feedback.style.display = 'block'; // フィードバックを表示
 
-                setTimeout(() => {
-                    correctImage.style.display = 'none'; // 1秒後に画像を非表示
-                    feedback.style.display = 'none'; // フィードバックを非表示
+        	setTimeout(() => {
+            	correctImage.style.display = 'none'; // 1秒後に画像を非表示
+            	feedback.style.display = 'none'; // フィードバックを非表示
 
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < questions.length) {
-                        updateQuestion();
-                    } else {
-                        feedback.textContent = '全ての問題が終了しました！';
-                        feedback.style.color = 'black'; // 終了メッセージの色
-                        feedback.style.fontSize = '24px'; // 終了メッセージのフォントサイズ
-                        currentQuestionIndex = 0; // リセットする場合
-                    }
-                }, 1000); // 1秒後に次の問題へ
-            } else {
-                incorrectImage.style.display = 'block'; // 不正解の画像を表示
-                feedback.style.display = 'block'; // フィードバックを表示
+            	currentQuestionIndex++;
+            	if (currentQuestionIndex < questions.length) {
+                	updateQuestion();
+            	} else {
+                	// 全ての問題が終了した場合、2秒の遅延を追加
+                	setTimeout(() => {
+                    	document.getElementById('game-over-background').style.display = 'flex'; // 背景画像を表示
+                	}, 500); // ここで表示の遅延時間を設定
+            	}
+        	}, 1000); // 1秒後に次の問題へ
+    	} else {
+        	incorrectImage.style.display = 'block'; // 不正解の画像を表示
+        	feedback.style.display = 'block'; // フィードバックを表示
 
-                setTimeout(() => {
-                    incorrectImage.style.display = 'none'; // 3秒後に画像を非表示
-                    feedback.style.display = 'none'; // フィードバックを非表示
-                }, 1000); // 3秒後に非表示
-            }
-        }
+        setTimeout(() => {
+            incorrectImage.style.display = 'none'; // 1秒後に画像を非表示
+            feedback.style.display = 'none'; // フィードバックを非表示
+        }, 1000); // 1秒後に非表示
+    }
+}
 
-        updateQuestion(); // 初期問題の設定
+
+        // 初期化時に関数を呼び出す
+        initGame();
     </script>
+
 </body>
 </html>
