@@ -18,6 +18,12 @@
             max-width: 50%;
             height: auto;
         }
+		
+		#quiz-image {
+    	max-width: 30%; /* 画像の最大幅を50%に設定 */
+    	height: auto; /* アスペクト比を維持 */
+		}
+		
         .choices {
             display: flex;
             justify-content: center;
@@ -46,51 +52,43 @@
 </head>
 <body>
     <div class="container">
-        <h1>食物連鎖ゲーム</h1>
-        <img src="images/mijinko.png" alt="問題画像" id="quiz-image">
+        <h1>しょくもつれんさゲーム</h1>
+        <img src="images/kusa.png" alt="問題画像" id="quiz-image">
         
         <div class="choices">
-            <button class="choice-button" onclick="checkAnswer('A')"><img src="images/smallfish.png" alt="選択肢A"></button>
-            <button class="choice-button" onclick="checkAnswer('B')"><img src="images/choice-image2.jpg" alt="選択肢B"></button>
-            <button class="choice-button" onclick="checkAnswer('C')"><img src="images/choice-image3.jpg" alt="選択肢C"></button>
+            <button class="choice-button" onclick="checkAnswer('A')"><img src="smallfish.png" alt="選択肢A"></button>
+            <button class="choice-button" onclick="checkAnswer('B')"><img src="choice-image2.jpg" alt="選択肢B"></button>
+            <button class="choice-button" onclick="checkAnswer('C')"><img src="choice-image3.jpg" alt="選択肢C"></button>
         </div>
 
         <div id="feedback" class="feedback">
             <!-- 正解時と不正解時の画像をここに指定 -->
-            <img id="correct-image" src="images/maru.png" alt="正解画像" style="display:none;">
-            <img id="incorrect-image" src="images/batu.png" alt="不正解画像" style="display:none;">
+            <img id="correct-image" src="maru.png" alt="正解画像" style="display:none;">
+            <img id="incorrect-image" src="batu.png" alt="不正解画像" style="display:none;">
         </div>
     </div>
 
     <script>
         const questions = [
             {
-                image: 'images/mijinko.png',
+                image: 'images/kusa.png',
                 choices: [
-                    { img: 'images/smallfish.png', answer: 'A' },
-                    { img: 'images/4.png', answer: 'B' },
-                    { img: 'images/5.png', answer: 'C' }
+                    { img: 'images/rabit.png', answer: 'A' },
+                    { img: 'images/smallfish.png', answer: 'B' },
+                    { img: 'images/mijinko.png', answer: 'C' }
                 ],
                 correctAnswer: 'A'
             },
             {
-                image: 'images/smallfish.png',
+                image: 'images/rabit-Q.png',
                 choices: [
-                    { img: 'images/1.png', answer: 'D' },
-                    { img: 'images/2.png', answer: 'E' },
-                    { img: 'images/6.png', answer: 'F' }
+                    { img: 'images/shark.png', answer: 'D' },
+                    { img: 'images/lion.png', answer: 'E' },
+                    { img: 'images/kame.png', answer: 'F' }
                 ],
                 correctAnswer: 'B'
             },
-            {
-                image: 'images/3.png',
-                choices: [
-                    { img: 'images/3.png', answer: 'G' },
-                    { img: 'images/4.png', answer: 'H' },
-                    { img: 'images/5.png', answer: 'I' }
-                ],
-                correctAnswer: 'A'
-            }
+            
             // 追加の問題はここに追加します
         ];
 
