@@ -138,18 +138,23 @@
     }
 
     function checkAnswer() {
-      const dropZone = document.getElementById('drop-zone');
+  const dropZone = document.getElementById('drop-zone');
 
-      if (selectedChoice === 'choice4') {
-        document.body.style.backgroundImage = "url('images/correct-background.png')";
-        dropZone.classList.add('correct');
+  if (selectedChoice === 'choice4') {
+    document.body.style.backgroundImage = "url('correct-background.png')";
+    dropZone.classList.add('correct');
+
+    // 背景画像が切り替わってからメッセージを表示するように1秒遅延させる
+      setTimeout(() => {
         alert("正解です！");
-      } else {
-        dropZone.classList.add('wrong');
-        alert("不正解です。もう一度試してください。");
-        resetDropZone();
-      }
+      }, 1000); // 1秒（1000ミリ秒）遅延
+    } else {
+      dropZone.classList.add('wrong');
+      alert("不正解です。もう一度試してください。");
+      resetDropZone();
     }
+  }
+
 
     function resetDropZone() {
       const dropZone = document.getElementById('drop-zone');
