@@ -43,20 +43,22 @@
 <body>
 
 <h1>卵を産む動物はだれ？</h1>
-<div class="question"></div>
+<div class="question">
+  <p>動物をタップしてみよう！</p>
+</div>
 
 <div id="options">
   <div class="option" onclick="checkAnswer('うさぎ')">
-    <img src="images/usagi.png" alt="うさぎ" width="100" height="100">
+    <img src="usagi.png" alt="うさぎ" width="100" height="100">
   </div>
   <div class="option" onclick="checkAnswer('らいおん')">
-    <img src="images/gao.png" alt="らいおん" width="100" height="100">
+    <img src="gao.png" alt="らいおん" width="100" height="100">
   </div>
   <div class="option" onclick="checkAnswer('とり')">
-    <img src="images/tori.png" alt="とり" width="100" height="100">
+    <img src="tori.png" alt="とり" width="100" height="100">
   </div>
   <div class="option" onclick="checkAnswer('いるか')">
-    <img src="images/iruka.png" alt="いるか" width="100" height="100">
+    <img src="iruka.png" alt="いるか" width="100" height="100">
   </div>
 </div>
 
@@ -72,23 +74,24 @@
 
     // 各選択肢に対応する画像の設定
     const correctImages = {
-      'とり': 'images/tg00.gif' // 正解の画像（GIF）
+      'とり': 'tg00.gif' // 正解の画像（GIF）
     };
     
     const incorrectImages = {
-      'うさぎ': 'images/usagi_o.png', 
-      'らいおん': 'images/gao_o.png', 
-      'いるか': 'images/iruka_o.png'
+      'うさぎ': 'usagi_o.png', 
+      'らいおん': 'gao_o.png', 
+      'とり': 'incorrect_tori.png', 
+      'いるか': 'iruka_o.png'
     };
 
     if (eggAnimals.includes(selected)) {
       resultDiv.innerHTML = `${selected}は卵を産む動物です！`;
       resultDiv.style.color = 'green';
-      animationDiv.innerHTML = `<img src="${correctImages[selected]}" alt="正解" width="100" height="100">`; // 正解の画像
+      animationDiv.innerHTML = `<img src="${correctImages[selected]}" alt="正解" width="200" height="200">`; // 正解の画像
     } else {
       resultDiv.innerHTML = `${selected}は卵を産まない動物です。`;
       resultDiv.style.color = 'red';
-      animationDiv.innerHTML = `<img src="${incorrectImages[selected]}" alt="不正解" width="100" height="100">`; // 不正解の画像
+      animationDiv.innerHTML = `<img src="${incorrectImages[selected]}" alt="不正解" width="200" height="200">`; // 不正解の画像
     }
     
     animationDiv.style.display = 'block';
