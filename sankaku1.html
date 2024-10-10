@@ -32,11 +32,11 @@
       color: #00796b;
     }
     .animation {
-      margin-top: 20px;
-      width: 100px;
-      height: 100px;
-      margin: 0 auto;
-      display: none;
+      position: fixed; /* 固定位置を指定 */
+      top: 50%; /* 画面の50%の位置に配置 */
+      left: 50%; /* 画面の50%の位置に配置 */
+      transform: translate(-50%, -50%); /* 中心に揃える */
+      display: none; /* 最初は表示しない */
     }
   </style>
 </head>
@@ -84,16 +84,16 @@
     };
 
     if (eggAnimals.includes(selected)) {
-      resultDiv.innerHTML = `${selected}は卵を産む動物だよ！`;
+      resultDiv.innerHTML = `${selected}は卵を産む動物です！`;
       resultDiv.style.color = 'green';
       animationDiv.innerHTML = `<img src="${correctImages[selected]}" alt="正解" width="200" height="200">`; // 正解の画像
     } else {
-      resultDiv.innerHTML = `${selected}は卵を産まない動物だよ。`;
+      resultDiv.innerHTML = `${selected}は卵を産まない動物です。`;
       resultDiv.style.color = 'red';
       animationDiv.innerHTML = `<img src="${incorrectImages[selected]}" alt="不正解" width="200" height="200">`; // 不正解の画像
     }
     
-    animationDiv.style.display = 'block';
+    animationDiv.style.display = 'flex'; // フレックス表示を指定
 
     // アニメーションをリセット
     setTimeout(() => {
