@@ -142,16 +142,32 @@
     });
 
     function checkAnswer() {
-      const dropZone = document.getElementById('drop-zone');
-      if (dropZone.children.length > 0 && dropZone.children[0].id === 'choice4') {
-        document.body.style.backgroundImage = "url('images/correct-background.png')";
-        setTimeout(() => {
-          alert("正解です！");
-        }, 1000);
-      } else {
-        alert("不正解です。もう一度試してください。");
-      }
+  const dropZone = document.getElementById('drop-zone');
+  
+  // 画像がある場合の処理
+  if (dropZone.children.length > 0) {
+    if (dropZone.children[0].id === 'choice4') {
+      document.body.style.backgroundImage = "url('images/correct-background.png')";
+      setTimeout(() => {
+        alert("正解です！");
+        resetGame(); // 正解時にリセット
+      }, 1000);
+    } else {
+      alert("不正解です。もう一度試してください。");
+      resetGame(); // 不正解時にもリセット
     }
+  } else {
+    alert("画像をドロップしてください。");
+  }
+}
+
+// ゲームをリセットする関数
+function resetGame() {
+  const dropZone = document.getElementById('drop-zone');
+  dropZone.innerHTML = 'スライドしてここに移動'; // ドロップゾーンを初期状態に戻す
+  document.body.style.backgroundImage = "url('images/default-background.png')"; // 背景を元に戻す
+}
+
   </script>
 
 </body>
