@@ -22,17 +22,18 @@
         }
 
         #tank {
-            width: 90vw; /* 水槽の幅を調整 */
-            height: 50vh; /* 水槽の高さを調整 */
-            background-image: url('images/tank.png'); /* 水槽の画像パス */
-            background-size: cover; /* 背景画像がコンテナを覆うように調整 */
-            background-repeat: no-repeat; /* 背景画像の繰り返しを無効にする */
-            border: none;
-            margin: 10vh auto; /* 中央に配置し、上下に余白を作成 */
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
+    width: 90vw;
+    height: 50vh;
+    background-image: url('images/tank.png');
+    background-size: contain; /* containに変更 */
+    background-repeat: no-repeat;
+    background-position: center; /* 画像を中央に配置 */
+    border: none;
+    margin: 10vh auto;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
 
         p {
             font-size: 4vw; /* テキストをデバイスに合わせた大きさに調整 */
