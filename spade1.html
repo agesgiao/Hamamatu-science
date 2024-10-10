@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ドラッグ＆ドロップで背景切り替え</title>
+  <title>スライドで背景切り替え</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-image: url('images/default-background.png'); /* 最初の背景画像 */
+      background-image: url('images/default-background.png');
       background-size: cover;
       background-position: center;
       display: flex;
@@ -31,6 +31,7 @@
       width: 20vw;
       cursor: pointer;
       margin: 0 10px;
+      touch-action: none; /* タッチイベント対応 */
     }
 
     .drop-zone {
@@ -53,14 +54,6 @@
       left: 0;
     }
 
-    .drop-zone.correct {
-      border-color: green;
-    }
-
-    .drop-zone.wrong {
-      border-color: red;
-    }
-
     button {
       display: block;
       margin: 20px auto;
@@ -69,97 +62,70 @@
       position: absolute;
       top: 500px;
     }
-
-    @media (min-width: 768px) {
-      .drop-zone {
-        width: 150px;
-        height: 150px;
-        font-size: 14px;
-      }
-
-      .image-container img {
-        width: 80px;
-      }
-
-      button {
-        font-size: 16px;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- 画像をドロップする枠（中央） -->
-  <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" id="drop-zone">
-    ドラッグしてここにドロップ
+  <!-- 画像をスライドする枠（中央） -->
+  <div class="drop-zone" id="drop-zone">
+    スライドしてここに移動
   </div>
 
   <!-- 4つの選択肢（画面の下部） -->
   <div class="container">
     <div class="image-container">
-      <img src="images/gomu.png" draggable="true" ondragstart="drag(event)" id="choice1" alt="Choice 1">
-      <img src="images/note.png" draggable="true" ondragstart="drag(event)" id="choice2" alt="Choice 2">
-      <img src="images/pb.png" draggable="true" ondragstart="drag(event)" id="choice3" alt="Choice 3">
-      <img src="images/sin.png" draggable="true" ondragstart="drag(event)" id="choice4" alt="Choice 4">
+      <img src="images/gomu.png" id="choice1" alt="Choice 1" class="draggable">
+      <img src="images/note.png" id="choice2" alt="Choice 2" class="draggable">
+      <img src="images/pb.png" id="choice3" alt="Choice 3" class="draggable">
+      <img src="images/sin.png" id="choice4" alt="Choice 4" class="draggable">
     </div>
   </div>
 
   <button onclick="checkAnswer()">実行</button>
 
   <script>
-    let selectedChoice = null;  // ドロップされた選択肢を保持する変数
+    let selectedChoice = null;
+    let startX = 0, startY = 0;
 
-    function allowDrop(event) {
+    // タッチ開始
+    document.querySelectorAll('.draggable').forEach(img => {
+      img.addEventListener('touchstart', function (event) {
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+        selectedChoice = this.id;
+      });
+    });
+
+    // タッチ移動
+    document.querySelector('.drop-zone').addEventListener('touchmove', function (event) {
       event.preventDefault();
-    }
+      const touch = event.touches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
 
-    function drag(event) {
-      event.dataTransfer.setData("text", event.target.id);
-    }
+      const image = document.getElementById(selectedChoice);
+      image.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    });
 
-    function drop(event) {
-      event.preventDefault();
-      const data = event.dataTransfer.getData("text");
-      const droppedImage = document.getElementById(data);
-      const dropZone = event.target;
-
+    // タッチ終了
+    document.querySelector('.drop-zone').addEventListener('touchend', function () {
+      const dropZone = document.getElementById('drop-zone');
       dropZone.innerHTML = '';
-      const clonedImage = droppedImage.cloneNode(true);
+      const clonedImage = document.getElementById(selectedChoice).cloneNode(true);
       dropZone.appendChild(clonedImage);
-
-      clonedImage.style.maxWidth = "100%";
-      clonedImage.style.maxHeight = "100%";
-      clonedImage.style.position = "absolute";
-      clonedImage.style.top = "0";
-      clonedImage.style.left = "0";
-
-      selectedChoice = data;
-    }
+      selectedChoice = null;
+    });
 
     function checkAnswer() {
-  const dropZone = document.getElementById('drop-zone');
-
-  if (selectedChoice === 'choice4') {
-    document.body.style.backgroundImage = "url('images/correct-background.png')";
-    dropZone.classList.add('correct');
-
-    // 背景画像が切り替わってからメッセージを表示するように1秒遅延させる
-      setTimeout(() => {
-        alert("正解です！");
-      }, 1000); // 1秒（1000ミリ秒）遅延
-    } else {
-      dropZone.classList.add('wrong');
-      alert("不正解です。もう一度試してください。");
-      resetDropZone();
-    }
-  }
-
-
-    function resetDropZone() {
       const dropZone = document.getElementById('drop-zone');
-      dropZone.innerHTML = 'ドラッグしてここにドロップ';
-      dropZone.classList.remove('correct', 'wrong');
-      selectedChoice = null;
+      if (selectedChoice === 'choice4') {
+        document.body.style.backgroundImage = "url('images/correct-background.png')";
+        setTimeout(() => {
+          alert("正解です！");
+        }, 1000);
+      } else {
+        alert("不正解です。もう一度試してください。");
+      }
     }
   </script>
 
