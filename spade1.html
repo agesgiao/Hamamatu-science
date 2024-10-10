@@ -32,13 +32,16 @@
       cursor: pointer;
       margin: 0 10px;
       touch-action: none; /* タッチイベント対応 */
+      position: relative; /* 相対位置を指定 */
     }
 
     .drop-zone {
       width: 30vw;
       height: 30vw;
       border: 2px dashed #ccc;
-      display: inline-block;
+      display: flex; /* フレックスボックスを使用 */
+      justify-content: center;
+      align-items: center;
       text-align: center;
       font-size: 4vw;
       color: #aaa;
@@ -87,38 +90,60 @@
     let selectedChoice = null;
     let startX = 0, startY = 0;
 
-    // タッチ開始
+    // ドラッグ開始
     document.querySelectorAll('.draggable').forEach(img => {
       img.addEventListener('touchstart', function (event) {
         startX = event.touches[0].clientX;
         startY = event.touches[0].clientY;
-        selectedChoice = this.id;
+        selectedChoice = this;
+        this.style.transition = 'none'; // 移動中はアニメーションを無効に
       });
     });
 
     // タッチ移動
-    document.querySelector('.drop-zone').addEventListener('touchmove', function (event) {
-      event.preventDefault();
-      const touch = event.touches[0];
-      const deltaX = touch.clientX - startX;
-      const deltaY = touch.clientY - startY;
+    document.addEventListener('touchmove', function (event) {
+      if (selectedChoice) {
+        event.preventDefault();
+        const touch = event.touches[0];
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
 
-      const image = document.getElementById(selectedChoice);
-      image.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        // 画像の位置を更新
+        selectedChoice.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+      }
     });
 
     // タッチ終了
-    document.querySelector('.drop-zone').addEventListener('touchend', function () {
-      const dropZone = document.getElementById('drop-zone');
-      dropZone.innerHTML = '';
-      const clonedImage = document.getElementById(selectedChoice).cloneNode(true);
-      dropZone.appendChild(clonedImage);
-      selectedChoice = null;
+    document.addEventListener('touchend', function () {
+      if (selectedChoice) {
+        const dropZone = document.getElementById('drop-zone');
+        const rect = dropZone.getBoundingClientRect();
+        const choiceRect = selectedChoice.getBoundingClientRect();
+
+        // ドロップゾーン内に入った場合
+        if (
+          choiceRect.left >= rect.left &&
+          choiceRect.right <= rect.right &&
+          choiceRect.top >= rect.top &&
+          choiceRect.bottom <= rect.bottom
+        ) {
+          dropZone.innerHTML = ''; // 既存の内容をクリア
+          const clonedImage = selectedChoice.cloneNode(true);
+          clonedImage.style.position = 'absolute'; // 絶対位置に設定
+          clonedImage.style.transform = 'none'; // 元の位置にリセット
+          dropZone.appendChild(clonedImage);
+        }
+
+        // 画像を元の位置に戻す
+        selectedChoice.style.transform = 'translate(0, 0)';
+        selectedChoice.style.transition = ''; // アニメーションを戻す
+        selectedChoice = null;
+      }
     });
 
     function checkAnswer() {
       const dropZone = document.getElementById('drop-zone');
-      if (selectedChoice === 'choice4') {
+      if (dropZone.children.length > 0 && dropZone.children[0].id === 'choice4') {
         document.body.style.backgroundImage = "url('images/correct-background.png')";
         setTimeout(() => {
           alert("正解です！");
