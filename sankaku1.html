@@ -1,177 +1,107 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>食物連鎖ゲーム</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            margin: 20px;
-        }
-        img {
-            max-width: 50%;
-            height: auto;
-        }
-
-        #quiz-image {
-            max-width: 30%; /* 画像の最大幅を30%に設定 */
-            height: auto; /* アスペクト比を維持 */
-        }
-
-        .choices {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .choice-button {
-            margin: 0 10px;
-            padding: 0;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-        }
-        .feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 100px;
-            font-weight: bold;
-            display: none; /* 初期状態では非表示 */
-        }
-        .feedback img {
-            max-width: 500px; /* 画像サイズを調整 */
-        }
-        #game-over-background {
-            display: none; /* 初期状態で非表示 */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.8); /* 背景を半透明に */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* 他の要素より前面に表示 */
-        }
-        #game-over-background img {
-            max-width: 100%; /* 背景画像のサイズ調整 */
-            height: auto;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>卵を産むか産まないかクイズ（画像版）</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #00796b;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .option {
+      display: inline-block;
+      margin: 10px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .option:hover {
+      transform: scale(1.1);
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #00796b;
+    }
+    .animation {
+      margin-top: 20px;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>しょくもつれんさゲーム</h1>
-        <img src="images/kusa.png" alt="問題画像" id="quiz-image">
-        
-        <div class="choices">
-            <button class="choice-button" onclick="checkAnswer('A')"><img src="smallfish.png" alt="選択肢A"></button>
-            <button class="choice-button" onclick="checkAnswer('B')"><img src="choice-image2.jpg" alt="選択肢B"></button>
-            <button class="choice-button" onclick="checkAnswer('C')"><img src="choice-image3.jpg" alt="選択肢C"></button>
-        </div>
 
-        <div id="feedback" class="feedback">
-            <!-- 正解時と不正解時の画像をここに指定 -->
-            <img id="correct-image" src="images/maru.png" alt="正解画像" style="display:none;">
-            <img id="incorrect-image" src="images/batu.png" alt="不正解画像" style="display:none;">
-        </div>
-    </div>
+<h1>卵を産む動物はだれ？</h1>
+<div class="question"></div>
 
-    <!-- 全問題終了後に表示する背景画像 -->
-    <div id="game-over-background">
-        <img src="images/last.png" alt="ゲーム終了画面">
-    </div>
+<div id="options">
+  <div class="option" onclick="checkAnswer('うさぎ')">
+    <img src="usagi.png" alt="うさぎ" width="100" height="100">
+  </div>
+  <div class="option" onclick="checkAnswer('らいおん')">
+    <img src="gao.png" alt="らいおん" width="100" height="100">
+  </div>
+  <div class="option" onclick="checkAnswer('とり')">
+    <img src="tori.png" alt="とり" width="100" height="100">
+  </div>
+  <div class="option" onclick="checkAnswer('いるか')">
+    <img src="iruka.png" alt="いるか" width="100" height="100">
+  </div>
+</div>
 
-        <script>
-        const questions = [
-            {
-                image: 'images/kusa.png',
-                choices: [
-                    { img: 'images/rabit.png', answer: 'A' },
-                    { img: 'images/smallfish.png', answer: 'B' },
-                    { img: 'images/mijinko.png', answer: 'C' }
-                ],
-                correctAnswer: 'A'
-            },
-            {
-                image: 'images/rabit-Q.png',
-                choices: [
-                    { img: 'images/shark.png', answer: 'D' },
-                    { img: 'images/lion.png', answer: 'E' },
-                    { img: 'images/kame.png', answer: 'F' }
-                ],
-                correctAnswer: 'B'
-            },
-            
-            // 追加の問題はここに追加します
-        ];
+<div id="result" class="result"></div>
+<div class="animation" id="animation"></div>
 
-        let currentQuestionIndex = 0;
+<script>
+  function checkAnswer(selected) {
+    const resultDiv = document.getElementById('result');
+    const animationDiv = document.getElementById('animation');
 
-        // 初期化時にgame-over-backgroundを明示的に非表示にする
-        function initGame() {
-            document.getElementById('game-over-background').style.display = 'none';
-            updateQuestion();
-        }
+    const eggAnimals = ['とり']; // 卵を産む動物
 
-        function updateQuestion() {
-            const question = questions[currentQuestionIndex];
-            document.getElementById('quiz-image').src = question.image;
-            const buttons = document.querySelectorAll('.choice-button');
-            buttons.forEach((button, index) => {
-                button.querySelector('img').src = question.choices[index].img;
-                button.setAttribute('data-answer', question.choices[index].answer);
-            });
-            document.getElementById('feedback').style.display = 'none'; // フィードバックを非表示
-        }
+    // 各選択肢に対応する画像の設定
+    const correctImages = {
+      'とり': 'tg00.gif' // 正解の画像（GIF）
+    };
+    
+    const incorrectImages = {
+      'うさぎ': 'usagi_o.png', 
+      'らいおん': 'gao_o.png', 
+      'とり': 'incorrect_tori.png', 
+      'いるか': 'iruka_o.png'
+    };
 
-        function checkAnswer(selected) {
-    	const correctAnswer = questions[currentQuestionIndex].correctAnswer;
-    	const feedback = document.getElementById('feedback');
-    	const correctImage = document.getElementById('correct-image');
-    	const incorrectImage = document.getElementById('incorrect-image');
-
-    	if (selected === correctAnswer) {
-        	correctImage.style.display = 'block'; // 正解の画像を表示
-        	feedback.style.display = 'block'; // フィードバックを表示
-
-        	setTimeout(() => {
-            	correctImage.style.display = 'none'; // 1秒後に画像を非表示
-            	feedback.style.display = 'none'; // フィードバックを非表示
-
-            	currentQuestionIndex++;
-            	if (currentQuestionIndex < questions.length) {
-                	updateQuestion();
-            	} else {
-                	// 全ての問題が終了した場合、2秒の遅延を追加
-                	setTimeout(() => {
-                    	document.getElementById('game-over-background').style.display = 'flex'; // 背景画像を表示
-                	}, 500); // ここで表示の遅延時間を設定
-            	}
-        	}, 1000); // 1秒後に次の問題へ
-    	} else {
-        	incorrectImage.style.display = 'block'; // 不正解の画像を表示
-        	feedback.style.display = 'block'; // フィードバックを表示
-
-        setTimeout(() => {
-            incorrectImage.style.display = 'none'; // 1秒後に画像を非表示
-            feedback.style.display = 'none'; // フィードバックを非表示
-        }, 1000); // 1秒後に非表示
+    if (eggAnimals.includes(selected)) {
+      resultDiv.innerHTML = `${selected}は卵を産む動物です！`;
+      resultDiv.style.color = 'green';
+      animationDiv.innerHTML = `<img src="${correctImages[selected]}" alt="正解" width="100" height="100">`; // 正解の画像
+    } else {
+      resultDiv.innerHTML = `${selected}は卵を産まない動物です。`;
+      resultDiv.style.color = 'red';
+      animationDiv.innerHTML = `<img src="${incorrectImages[selected]}" alt="不正解" width="100" height="100">`; // 不正解の画像
     }
-}
+    
+    animationDiv.style.display = 'block';
 
-
-        // 初期化時に関数を呼び出す
-        initGame();
-    </script>
+    // アニメーションをリセット
+    setTimeout(() => {
+      animationDiv.style.display = 'none';
+      animationDiv.innerHTML = ''; // 画像を消去
+      resultDiv.innerHTML = ''; // 結果の表示を消去
+    }, 2000); // 2秒間表示（GIFの再生時間に合わせる）
+  }
+</script>
 
 </body>
 </html>
