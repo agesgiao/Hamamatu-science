@@ -85,11 +85,11 @@
     };
 
     if (eggAnimals.includes(selected)) {
-      resultDiv.innerHTML = `${selected}は卵を産む動物です！`;
+      resultDiv.innerHTML = `${selected}は卵を産む動物だよ！`;
       resultDiv.style.color = 'green';
       animationDiv.innerHTML = `<img src="${correctImages[selected]}" alt="正解" width="200" height="200">`; // 正解の画像
     } else {
-      resultDiv.innerHTML = `${selected}は卵を産まない動物です。`;
+      resultDiv.innerHTML = `${selected}は卵を産まない動物だよ。`;
       resultDiv.style.color = 'red';
       animationDiv.innerHTML = `<img src="${incorrectImages[selected]}" alt="不正解" width="200" height="200">`; // 不正解の画像
     }
