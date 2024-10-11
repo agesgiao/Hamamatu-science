@@ -20,7 +20,6 @@
         #dropZone {
             width: 300px;
             height: 200px;
-           
             position: absolute;
             top: 1%;
             right: 5%;
@@ -34,6 +33,7 @@
             height: 100px;
             margin: 10px;
             cursor: grab;
+            position: absolute; /* ポジションを絶対に */
         }
         #imageContainer {
             text-align: center;
@@ -61,7 +61,6 @@
     
 </body>
 <script>
-
 // みかんをドロップするカウント
 let dropCount = 0;
 const maxDropCount = 3; // ドロップできるみかんの最大数
@@ -70,25 +69,38 @@ const maxDropCount = 3; // ドロップできるみかんの最大数
 const mikanImage = document.getElementById('mikan');
 const dropZone = document.getElementById('dropZone');
 
-// ドラッグスタート時のイベント設定
-mikanImage.addEventListener('dragstart', (e) => {
+// タッチイベントとドラッグイベントに対応
+let currentDraggedElement = null;
+
+function handleDragStart(e) {
+    currentDraggedElement = e.target;
     e.dataTransfer.setData('text', e.target.id);
-});
+}
 
-// ドロップゾーンに対するイベント設定
-dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault(); // デフォルト動作を無効にして、ドロップを有効化
-});
+function handleTouchStart(e) {
+    const touch = e.touches[0];
+    currentDraggedElement = e.target;
+    currentDraggedElement.style.left = `${touch.pageX - 50}px`;
+    currentDraggedElement.style.top = `${touch.pageY - 50}px`;
+    e.preventDefault(); // デフォルトのタッチイベント無効化
+}
 
-dropZone.addEventListener('drop', (e) => {
+function handleTouchMove(e) {
+    const touch = e.touches[0];
+    currentDraggedElement.style.left = `${touch.pageX - 50}px`;
+    currentDraggedElement.style.top = `${touch.pageY - 50}px`;
+    e.preventDefault(); // スクロール等を防ぐ
+}
+
+function handleDrop(e) {
     e.preventDefault();
-    
+
     // みかんの数が3個を超えないように制限
     if (dropCount >= maxDropCount) {
         return; // 3個以上ドロップできない
     }
 
-    const imageId = e.dataTransfer.getData('text');
+    const imageId = e.dataTransfer ? e.dataTransfer.getData('text') : currentDraggedElement.id;
 
     // みかんがドロップされた場合の処理
     if (imageId === 'mikan') {
@@ -115,7 +127,17 @@ dropZone.addEventListener('drop', (e) => {
             });
         }
     }
-});
+}
+
+// イベントリスナーを追加
+mikanImage.addEventListener('dragstart', handleDragStart);
+mikanImage.addEventListener('touchstart', handleTouchStart);
+mikanImage.addEventListener('touchmove', handleTouchMove);
+
+// ドロップゾーンに対するイベント設定
+dropZone.addEventListener('dragover', (e) => e.preventDefault());
+dropZone.addEventListener('drop', handleDrop);
+dropZone.addEventListener('touchend', handleDrop);
 
 </script>
 </html>
