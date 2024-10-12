@@ -21,7 +21,7 @@
             width: 300px;
             height: 200px;
             position: absolute;
-            top: 20%;
+            top: 20%; /* 初期位置 */
             right: 5%;
             transform: translateY(-50%);
             background-color: rgba(255, 255, 255, 0.5); /* 少し透明な白で背景をつける */
@@ -114,6 +114,9 @@ function handleDrop(e) {
         // みかんを3つドロップしたら天秤の画像を変更
         if (dropCount === 3) {
             document.getElementById('background').style.backgroundImage = "url('images/tenbin2.png')"; // 天秤が釣り合った状態の画像に変更
+
+            // ドロップゾーンの位置を調整
+            dropZone.style.top = '30%'; // 新しい画像に合わせてドロップゾーンの位置を調整
         }
     }
 }
@@ -162,6 +165,9 @@ function handleTouchEnd(e) {
         dropCount++;
         if (dropCount === 3) {
             document.getElementById('background').style.backgroundImage = "url('images/tenbin2.png')"; // 天秤が釣り合った状態の画像に変更
+
+            // ドロップゾーンの位置を調整
+            dropZone.style.top = '30%'; // 新しい画像に合わせてドロップゾーンの位置を調整
         }
     }
 
