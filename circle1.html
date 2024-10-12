@@ -9,7 +9,7 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center; /* 中央に配置 */
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
@@ -22,14 +22,16 @@
             aspect-ratio: 1; /* 正方形に保つ */
             border: 1px solid #000;
             background-color: #fff;
-            margin-top: 20px;
+            margin-bottom: 80px; /* ボタンの高さ分の余白を確保 */
         }
 
         .button-container {
             display: flex;
             justify-content: center;
             width: 100%;
-            margin-bottom: 20px;
+            position: fixed; /* 固定位置 */
+            bottom: 20px; /* 画面下からの距離 */
+            z-index: 10; /* 他の要素より前面に */
         }
 
         .button {
@@ -63,7 +65,8 @@
         <button id="greenButton" class="button">グリーン</button>
         <button id="blueButton" class="button">ブルー</button>
     </div>
-    <script>const canvas = document.getElementById('gameCanvas');
+    <script>
+        const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
@@ -118,6 +121,7 @@
             document.getElementById('blueButton').addEventListener('click', () => toggleCircleVisibility('rgba(0, 0, 255, 1)'));
         }
 
-        init();</script>
+        init();
+    </script>
 </body>
 </html>
