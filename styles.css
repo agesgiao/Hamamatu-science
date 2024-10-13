@@ -344,11 +344,16 @@ a.btn:hover {
     align-items: center; /* Center vertically */
 }
 
-.yoko img {
-    width: auto; /* Auto width */
-    height: auto; /* Auto height */
-    margin-left: 30px; /* Add space to the right */
+img {
+    max-width: 100%; /* 画像の幅を100%以内に収める */
+    height: auto; /* アスペクト比を維持しながら高さを自動調整 */
 }
+
+.yoko img {
+    width: 80%; /* 画像の横幅を80%に縮小する（必要に応じて調整） */
+    margin: 10px; /* 画像同士や周囲の余白をつける */
+}
+
 
 /* Sankaku Mondai */
 .spaced-text {
